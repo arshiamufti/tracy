@@ -13,3 +13,6 @@ Resources (so far):
 - [Going down the rabbit hole with Rust
   traits](http://www.jonathanturner.org/2016/02/down-the-rabbit-hole-with-traits.html)
 by Jonathan Turner
+- [Abstraction without overhead: traits in
+  Rust](https://blog.rust-lang.org/2015/05/11/traits.html) (on the rust-lang
+blog)
