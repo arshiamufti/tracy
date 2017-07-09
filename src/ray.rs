@@ -1,21 +1,20 @@
-pub use self::vector::Vec3;
-mod vector;
+use vector::Vec3;
 
 pub struct Ray {
-    pub A: Vec3,
-    pub B: Vec3
+    pub a: Vec3,
+    pub b: Vec3
 }
 
 impl Ray {
     pub fn origin(&self) -> Vec3 {
-        self.A
+        self.a
     }
 
     pub fn direction(&self) -> Vec3 {
-        self.B
+        self.b
     }
 
     pub fn point_at(&self, t: f32) -> Vec3 {
-        self.A + t*self.B
+        self.a + t*self.b
     }
 }

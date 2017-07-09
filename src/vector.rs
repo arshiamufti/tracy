@@ -1,5 +1,6 @@
 use std::ops::{Add, Sub, Mul, Neg};
 
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec3 {
     pub x: f32,
     pub y: f32,
@@ -13,6 +14,10 @@ impl Vec3 {
 
     pub fn from_one(v: f32) -> Vec3 {
         Vec3 { x: v, y: v, z: v }
+    }
+
+    pub fn unit(&self) -> Vec3 {
+        *self * ((1.0/(self.length())) as f32)
     }
 
     pub fn length(&self) -> f32 {
