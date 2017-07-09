@@ -11,6 +11,29 @@ mod vector;
 pub use self::ray::Ray;
 mod ray;
 
+/*
+ * We have a sphere, defined by the coordinates of its center and its radius,
+ * call it S(C, R). And we have a ray, represented by an origin point (A) and a
+ * direction vector (B) and with the equation p(t) = A + t*B (see ray.rs).
+ * To display the sphere in the image, we need to figure out if a ray of light
+ * coming from the camera/eye hits the sphere or not, and if it does, colour it
+ * a certain colour.
+ *
+ * A ray hits the sphere if it satisfies the equation of the sphere. The
+ * equation of a sphere centered at C = (cx, cy, cz) with radius R is (x-cx)^2 +
+ * (y-cy)^2 + (z-cz)^2 = R^2 which is the same as C.Q = R*R, where Q =
+ * (x, y, z).
+ *
+ * So, a ray p(t) hits the sphere S(C, R) if p(t) satisfies the equation of the
+ * sphere. So we want to solve
+ *
+ * (p(t) - C).(p(t)-C) = R^2 = 0
+ *
+ * which is a quadratic equation in t.
+ *
+ * Luckily, high school prepared me for this challenge.
+ *
+ */
 fn does_hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> bool {
     let direction = ray.direction();
     let diff = ray.origin() - center;
