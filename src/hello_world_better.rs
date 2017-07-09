@@ -2,6 +2,8 @@
  * [chapter 2]
  *
  * Slightly improved hello world (used the Vec3 class)
+ *
+ * output: helloworld.png
  */
 
 pub use self::vector::Vec3;

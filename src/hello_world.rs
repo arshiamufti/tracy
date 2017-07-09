@@ -3,6 +3,8 @@
  *
  * simple hello world example in rust!
  * write the output of this to a .png file and view it!
+ *
+ * output: helloworld.png
  */
 
 fn main() {
