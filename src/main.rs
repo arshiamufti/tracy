@@ -1,40 +1,21 @@
 /*
- * [chapter 4]
+ * [chapter 5]
  *
- * Spheres!
+ * Surface Normals
  *
- * output: simplesphere.png
+ * output: sphere.png
  */
 
 pub use self::vector::Vec3;
 mod vector;
 pub use self::ray::Ray;
 mod ray;
+use std::f32;
 
 /*
- * We have a sphere, defined by the coordinates of its center and its radius,
- * call it S(C, R). And we have a ray, represented by an origin point (A) and a
- * direction vector (B) and with the equation p(t) = A + t*B (see ray.rs).
- * To display the sphere in the image, we need to figure out if a ray of light
- * coming from the camera/eye hits the sphere or not, and if it does, colour it
- * a certain colour.
- *
- * A ray hits the sphere if it satisfies the equation of the sphere. The
- * equation of a sphere centered at C = (cx, cy, cz) with radius R is (x-cx)^2 +
- * (y-cy)^2 + (z-cz)^2 = R^2 which is the same as C.Q = R*R, where Q =
- * (x, y, z).
- *
- * So, a ray p(t) hits the sphere S(C, R) if p(t) satisfies the equation of the
- * sphere. So we want to solve
- *
- * (p(t) - C).(p(t)-C) = R^2 = 0
- *
- * which is a quadratic equation in t.
- *
- * Luckily, high school prepared me for this challenge.
- *
+ * If the ray does hit the sphere, return the smallest solution to the equation
  */
-fn does_hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> bool {
+fn does_hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> f32 {
     let direction = ray.direction();
     let diff = ray.origin() - center;
     let a = direction.dot(&direction);
@@ -42,22 +23,33 @@ fn does_hit_sphere(center: Vec3, radius: f32, ray: &Ray) -> bool {
     let c = diff.dot(&diff) - (radius * radius);
     let discriminant = (b * b) - (4.0 * a * c);
 
-    discriminant > 0.0
+    if discriminant < 0.0 {
+        -1.0
+    } else {
+        (-b - discriminant.sqrt())/(2.0*a)
+    }
 }
+
 /*
- * This function accepts a ray and returns the colour of the background. The
- * colour is some gradient of blue depending on the y value of the ray's
- * direction. (see more in simple_camera.rs)
+ * see documentation in simple_sphere.rs
+ *
+ * If the ray does hit the sphere, get the normal to the sphere at a point of
+ * intersection. Scale each component so that it is between 0.0 and 1.0. Get
+ * rbg values by mapping x to r, y to g, and z to b.
  */
 fn color(ray: &Ray) -> Vec3 {
-    let red = Vec3 { x: 1.0, y: 0.0, z: 0.0 };
     let blue = Vec3 { x: 0.5, y: 0.7, z: 1.0 };
     let white = Vec3::from_one(1.0);
 
     let radius = 0.5;
     let center = Vec3 { x: 0.0, y: 0.0, z: -1.0 };
-    if does_hit_sphere(center, radius, &ray) {
-        return red;
+
+    let t = does_hit_sphere(center, radius, &ray);
+    if t > 0.0 {
+        let normal = (ray.point_at(t) - center).unit();
+        // each component of the normal is between -1.0 and 1.0. Scale it so
+        // that it is between 0.0 and 1.0
+        return 0.5 * Vec3 { x: normal.x + 1.0, y: normal.y + 1.0, z: normal.z + 1.0 };
     }
 
     let unit_direction = ray.direction().unit();
