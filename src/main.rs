@@ -6,16 +6,12 @@
  * output: multiple_spheres.png
  */
 
-pub use self::vector::Vec3;
-mod vector;
-pub use self::ray::Ray;
-mod ray;
-pub use self::hitable::Hitable;
-mod hitable;
-pub use self::sphere::Sphere;
-mod sphere;
-pub use self::hlist::HitableList;
-mod hlist;
+mod model;
+use model::vector::Vec3 as Vec3;
+use model::sphere::Sphere as Sphere;
+use model::ray::Ray as Ray;
+use model::hlist::HitableList as HitableList;
+use model::hitable::Hitable as Hitable;
 use std::f32;
 
 /*

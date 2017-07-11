@@ -1,4 +1,4 @@
-use vector::Vec3;
+use model::vector::Vec3;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Ray {

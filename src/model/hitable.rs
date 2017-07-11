@@ -1,5 +1,5 @@
-use vector::Vec3;
-use ray::Ray;
+use model::vector::Vec3;
+use model::ray::Ray;
 
 pub trait Hitable {
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;

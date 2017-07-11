@@ -6,8 +6,8 @@
  * output: helloworld.png
  */
 
-pub use self::vector::Vec3;
-mod vector;
+mod model;
+use model::vector::Vec3 as Vec3;
 
 fn main() {
 

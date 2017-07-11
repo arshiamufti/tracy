@@ -6,10 +6,9 @@
  * output: simplesphere.png
  */
 
-pub use self::vector::Vec3;
-mod vector;
-pub use self::ray::Ray;
-mod ray;
+mod model;
+use model::vector::Vec3 as Vec3;
+use model::ray::Ray as Ray;
 
 /*
  * We have a sphere, defined by the coordinates of its center and its radius,

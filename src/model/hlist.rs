@@ -1,6 +1,6 @@
-use hitable::Hitable;
-use hitable::HitRecord;
-use ray::Ray;
+use model::hitable::Hitable;
+use model::hitable::HitRecord;
+use model::ray::Ray;
 use std::f32;
 
 pub struct HitableList {

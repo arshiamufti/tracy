@@ -1,7 +1,7 @@
-use hitable::Hitable;
-use hitable::HitRecord;
-use ray::Ray;
-use vector::Vec3;
+use model::hitable::Hitable;
+use model::hitable::HitRecord;
+use model::ray::Ray;
+use model::vector::Vec3;
 use std::f32;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
