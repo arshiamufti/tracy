@@ -1,5 +1,5 @@
 use model::ray::Ray;
-use model::vector::Vector;
+use model::vector::Vec3;
 
 pub struct Camera {
     pub origin: Vec3,

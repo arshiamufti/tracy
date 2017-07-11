@@ -3,7 +3,7 @@
  *
  * Antialiasing
  *
- * output: antialiasing.png
+ * output: sphere_with_antialiasing.png
  */
 
 mod model;
@@ -15,7 +15,11 @@ use model::hitable::Hitable as Hitable;
 use model::camera::Camera as Camera;
 use std::f32;
 
+extern crate rand;
+use rand::Rng;
 /*
+ * [ same as multiple_spheres.rs ]
+ * 
  * Now, we hav a "world", which is simply an item that is Hitable (such as a
  * sphere or a list of spheres). A Hitable is anything that implements the `hit`
  * function. `hit` accepts a ray, and a range, and returns an Option<HitRecord>.
@@ -45,6 +49,9 @@ fn color(ray: &Ray, world: &Hitable) -> Vec3 {
     }
 }
 
+/*
+ * TODO: document antialiasing
+ */
 fn main() {
 
     let nx = 200; // rows
@@ -60,12 +67,18 @@ fn main() {
         ]
     };
     let camera = Camera::default();
+    let mut rng = rand::thread_rng();
+    rng.next_f32();
     for j in (0..ny).rev() {
         for i in 0..nx {
-            let u = (i as f32)/(nx as f32);
-            let v =  (j as f32)/(ny as f32);
-            let ray = camera.get_ray(u, v);
-            let c = color(&ray, &world);
+            let c = {
+                (0..ns).fold (Vec3{x: 0.0, y: 0.0, z: 0.0}, |acc, _| {
+                    let u = (i as f32 + rng.next_f32())/(nx as f32);
+                    let v = (j as f32 + rng.next_f32())/(ny as f32);
+                    let ray = camera.get_ray(u, v);
+                    acc + color(&ray, &world)
+                }) * (1.0 / (ns as f32))
+            };
             let ir = (255.99*c.x) as i32;
             let ig = (255.99*c.y) as i32;
             let ib = (255.99*c.z) as i32;
