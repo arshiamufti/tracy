@@ -1,9 +1,9 @@
 /*
- * [chapter 5 (improvement) ]
+ * [chapter 6 ]
  *
- * Multiple Hitable Surfaces
+ * Antialiasing
  *
- * output: multiple_spheres.png
+ * output: antialiasing.png
  */
 
 mod model;
@@ -12,6 +12,7 @@ use model::sphere::Sphere as Sphere;
 use model::ray::Ray as Ray;
 use model::hlist::HitableList as HitableList;
 use model::hitable::Hitable as Hitable;
+use model::camera::Camera as Camera;
 use std::f32;
 
 /*
@@ -48,24 +49,22 @@ fn main() {
 
     let nx = 200; // rows
     let ny = 100; // columns
+    let ns = 100;
     println!("P3"); // the colors are in ASCII
     println!("{} {}", nx, ny);
     println!("255"); // max color
-    let origin = Vec3 { x: 0.0, y: 0.0, z: 0.0 };
-    let horizontal = Vec3 { x: 4.0, y: 0.0, z: 0.0 };
-    let vertical = Vec3 { x: 0.0, y: 2.0, z: 0.0 };
-    let lower_left = Vec3 { x: -2.0, y: -1.0, z: -1.0 };
     let world = HitableList {
         hlist: vec![
             Box::new(Sphere { radius: 0.5, center: Vec3 { x: 0.0, y: 0.0, z: -1.0} }),
             Box::new(Sphere { radius: 100.0, center: Vec3 { x: 0.0, y: -100.5, z: -1.0} })
         ]
     };
+    let camera = Camera::default();
     for j in (0..ny).rev() {
         for i in 0..nx {
             let u = (i as f32)/(nx as f32);
             let v =  (j as f32)/(ny as f32);
-            let ray = Ray { a: origin, b: lower_left + u*horizontal + v*vertical };
+            let ray = camera.get_ray(u, v);
             let c = color(&ray, &world);
             let ir = (255.99*c.x) as i32;
             let ig = (255.99*c.y) as i32;
