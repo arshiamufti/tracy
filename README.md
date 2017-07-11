@@ -16,3 +16,12 @@ by Jonathan Turner
 - [Abstraction without overhead: traits in
   Rust](https://blog.rust-lang.org/2015/05/11/traits.html) (on the rust-lang
 blog)
+
+Chapters:
+
+1. Hello, World! (`hello_world.rs`)
+2. Slightly improved hello world (`hello_world_better.rs`)
+3. Rays, a simple camera, and background (`simple_camera.rs`)
+4. Spheres! (`simple_sphere.rs`)
+5. Surface normals (shading spheres) (`single_shaded_spheres.rs`)
+6. Multiple hitable surfaces (`multiple_spheres.rs`)
