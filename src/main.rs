@@ -15,7 +15,21 @@ use model::hitable::Hitable as Hitable;
 use std::f32;
 
 /*
- * TODO: document this
+ * Now, we hav a "world", which is simply an item that is Hitable (such as a
+ * sphere or a list of spheres). A Hitable is anything that implements the `hit`
+ * function. `hit` accepts a ray, and a range, and returns an Option<HitRecord>.
+ * None is returned when the ray does not hit the item or if it does, but with
+ * a value of t (t being the parameter for the ray) that lies outside the
+ * specified range. Otherwise, Some(HitRecord) is returned, consisting of the
+ * point of intersection, the normal at that point, and the value of t for which
+ * the ray hits the item.
+ *
+ * In this example, we have a HitableList (which is hitable) of two spheres
+ * (which are hitable). We colour the spheres if the ray of light hits them
+ * (based on their normal at the point of the intersection), and render the blue
+ * gradient background if not.
+ *
+ * see hitable.rs for more.
  */
 fn color(ray: &Ray, world: &Hitable) -> Vec3 {
     match world.hit(ray, 0.0, 10000.0) {
