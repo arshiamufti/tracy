@@ -38,6 +38,11 @@ impl Vec3 {
         let s3 = (self.x*other.y) - (self.y*other.x);
         Vec3 { x: s1, y: s2, z: s3 }
     }
+
+    // TODO: panic if fields are negative!
+    pub fn sqrt_fields(&self) -> Vec3 {
+        Vec3 { x: self.x.sqrt(), y: self.y.sqrt(), z: self.z.sqrt() }
+    }
 }
 
 impl Add for Vec3 {

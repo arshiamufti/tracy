@@ -1,9 +1,9 @@
 /*
- * [chapter 6 ]
+ * [chapter 7 ]
  *
- * Antialiasing
+ * Diffuse Materials - render realistic looking spheres!
  *
- * output: sphere_with_antialiasing.png
+ * output: diffuse.png
  */
 
 mod model;
@@ -17,28 +17,40 @@ use std::f32;
 
 extern crate rand;
 use rand::Rng;
+
+fn random_point_in_unit_sphere() -> Vec3 {
+    let mut rng = rand::thread_rng();
+    let r = Vec3 { x: rng.next_f32(), y: rng.next_f32(), z: rng.next_f32() };
+    let point = (2.0 * r) - Vec3 { x: 1.0, y: 1.0, z: 1.0 };
+    if point.norm() >= 1.0 {
+        random_point_in_unit_sphere()
+    } else {
+        point
+    }
+}
 /*
- * [ same as multiple_spheres.rs ]
+ * [ see anitaliasing.rs, hitable.rs ]
  * 
- * Now, we hav a "world", which is simply an item that is Hitable (such as a
- * sphere or a list of spheres). A Hitable is anything that implements the `hit`
- * function. `hit` accepts a ray, and a range, and returns an Option<HitRecord>.
- * None is returned when the ray does not hit the item or if it does, but with
- * a value of t (t being the parameter for the ray) that lies outside the
- * specified range. Otherwise, Some(HitRecord) is returned, consisting of the
- * point of intersection, the normal at that point, and the value of t for which
- * the ray hits the item.
+ * Say we have a hit record with hit point p. Construct a unit sphere tangent to
+ * it. If -N is the normal at p pointing inwards, the the center of the sphere
+ * is p + N. Let `target` be a random point in that sphere. Construct a ray
+ * originating from p, going towards `target`, and colour the world. In this
+ * example, `target` could be a point that isn't hitable (so we colour it some
+ * shade of blue) or it could be a point on another object.
  *
- * In this example, we have a HitableList (which is hitable) of two spheres
- * (which are hitable). We colour the spheres if the ray of light hits them
- * (based on their normal at the point of the intersection), and render the blue
- * gradient background if not.
+ * 50% of the light is absorbed by the opaque object (this helps in rendering
+ * shadows too--if the first ray of light is directed at the crack between the
+ * two spheres, the reflected ray will probably also be directed towards a
+ * surface, so light is successively lost).
  *
- * see hitable.rs for more.
+ * // TODO: improve documentation above
  */
 fn color(ray: &Ray, world: &Hitable) -> Vec3 {
-    match world.hit(ray, 0.0, 10000.0) {
-        Some(rec) => 0.5 * Vec3 { x: rec.normal.x + 1.0, y: rec.normal.y + 1.0, z: rec.normal.z + 1.0 },
+    match world.hit(ray, 0.001, 10000.0) {
+        Some(rec) => {
+            let target = rec.p + rec.normal + random_point_in_unit_sphere();
+            0.5 * color( & Ray { a: rec.p, b: target - rec.p }, world)
+        }
         None => {
             let blue = Vec3 { x: 0.5, y: 0.7, z: 1.0 };
             let white = Vec3::from_one(1.0);
@@ -85,7 +97,7 @@ fn main() {
                     let ray = camera.get_ray(u, v);
                     acc + color(&ray, &world)
                 }) * (1.0 / (ns as f32))
-            };
+            }.sqrt_fields();
             let ir = (255.99*c.x) as i32;
             let ig = (255.99*c.y) as i32;
             let ib = (255.99*c.z) as i32;
