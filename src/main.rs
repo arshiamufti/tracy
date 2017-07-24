@@ -13,44 +13,23 @@ use model::ray::Ray as Ray;
 use model::hlist::HitableList as HitableList;
 use model::hitable::Hitable as Hitable;
 use model::camera::Camera as Camera;
+use model::material::Material as Material;
+use model::material::Lambertian as Lambertian;
+use model::material::Metal as Metal;
 use std::f32;
 
 extern crate rand;
 use rand::Rng;
 
-fn random_point_in_unit_sphere() -> Vec3 {
-    let mut rng = rand::thread_rng();
-    let r = Vec3 { x: rng.next_f32(), y: rng.next_f32(), z: rng.next_f32() };
-    let point = (2.0 * r) - Vec3 { x: 1.0, y: 1.0, z: 1.0 };
-    if point.norm() >= 1.0 {
-        random_point_in_unit_sphere()
-    } else {
-        point
-    }
-}
 /*
- * [ see anitaliasing.rs, hitable.rs ]
- * 
- * Say we have a hit record with hit point p. Construct a unit sphere tangent to
- * it. If -N is the normal at p pointing inwards, the the center of the sphere
- * is p + N. Let `target` be a random point in that sphere. Construct a ray
- * originating from p, going towards `target`, and colour the world. In this
- * example, `target` could be a point that isn't hitable (so we colour it some
- * shade of blue) or it could be a point on another object.
- *
- * 50% of the light is absorbed by the opaque object (this helps in rendering
- * shadows too--if the first ray of light is directed at the crack between the
- * two spheres, the reflected ray will probably also be directed towards a
- * surface, so light is successively lost).
- *
- * // TODO: improve documentation above
+ * TODO: document this
  */
-fn color(ray: &Ray, world: &Hitable) -> Vec3 {
+fn color(ray: &Ray, world: &Hitable, depth: u32) -> Vec3 {
     match world.hit(ray, 0.001, 10000.0) {
-        Some(rec) => {
-            let target = rec.p + rec.normal + random_point_in_unit_sphere();
-            0.5 * color( & Ray { a: rec.p, b: target - rec.p }, world)
-        }
+        Some(rec) => match (depth, rec.material.scatter(ray, &rec)) {
+            (d, Some((att, sc))) if d < 50 => att * color(&sc, world, depth + 1),
+            _ => Vec3::zero()
+        },
         None => {
             let blue = Vec3 { x: 0.5, y: 0.7, z: 1.0 };
             let white = Vec3::from_one(1.0);
@@ -81,8 +60,39 @@ fn main() {
     println!("255"); // max color
     let world = HitableList {
         hlist: vec![
-            Box::new(Sphere { radius: 0.5, center: Vec3 { x: 0.0, y: 0.0, z: -1.0} }),
-            Box::new(Sphere { radius: 100.0, center: Vec3 { x: 0.0, y: -100.5, z: -1.0} })
+            Box::new(Sphere {
+                radius: 0.5,
+                center: Vec3 { x: 0.0, y: 0.0, z: -1.0},
+                material: Material::Lambertian(
+                    Lambertian {
+                        albedo: Vec3 {x: 0.8, y: 0.3, z: 0.3}
+                    })
+                }),
+
+            Box::new(Sphere {
+                radius: 100.0,
+                center: Vec3 { x: 0.0, y: -100.5, z: -1.0},
+                material: Material::Lambertian(
+                    Lambertian {
+                        albedo: Vec3 { x: 0.8, y: 0.3, z: 0.3 }
+                    })
+                }),
+            Box::new(Sphere {
+                radius: 0.5,
+                center: Vec3 { x: 1.0, y: 0.0, z: -1.0},
+                material: Material::Metal(
+                    Metal {
+                        albedo: Vec3 { x: 0.8, y: 0.6, z: 0.2 }
+                    })
+                }),
+            Box::new(Sphere {
+                radius: 0.5,
+                center: Vec3 { x: -1.0, y: 0.0, z: -1.0},
+                material: Material::Metal(
+                    Metal {
+                        albedo: Vec3 { x: 0.8, y: 0.8, z: 0.8 }
+                    })
+                })
         ]
     };
     let camera = Camera::default();
@@ -95,7 +105,7 @@ fn main() {
                     let u = (i as f32 + rng.next_f32())/(nx as f32);
                     let v = (j as f32 + rng.next_f32())/(ny as f32);
                     let ray = camera.get_ray(u, v);
-                    acc + color(&ray, &world)
+                    acc + color(&ray, &world, 0)
                 }) * (1.0 / (ns as f32))
             }.sqrt_fields();
             let ir = (255.99*c.x) as i32;

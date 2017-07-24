@@ -1,5 +1,5 @@
 use model::hitable::Hitable;
-use model::hitable::HitRecord;
+use model::hitrecord::HitRecord;
 use model::ray::Ray;
 use std::f32;
 

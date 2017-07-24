@@ -1,5 +1,5 @@
-use model::vector::Vec3;
 use model::ray::Ray;
+use model::hitrecord::HitRecord;
 
 pub trait Hitable {
 
@@ -8,11 +8,4 @@ pub trait Hitable {
      * t is in the specified range.
      */
     fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
-}
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct HitRecord {
-    pub t: f32,
-    pub p: Vec3,
-    pub normal: Vec3
 }

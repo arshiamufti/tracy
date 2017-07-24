@@ -1,13 +1,15 @@
 use model::hitable::Hitable;
-use model::hitable::HitRecord;
+use model::hitrecord::HitRecord;
 use model::ray::Ray;
 use model::vector::Vec3;
+use model::material::Material;
 use std::f32;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Sphere {
     pub radius: f32,
-    pub center: Vec3
+    pub center: Vec3,
+    pub material: Material
 }
 
 impl Hitable for Sphere {
@@ -39,7 +41,8 @@ impl Hitable for Sphere {
                     Some(t) => Some(HitRecord { // TODO: figure out how to map over options in Rust
                         t: t,
                         p: ray.point_at(t),
-                        normal: (ray.point_at(t) - self.center).unit() // I hate myself for doing this
+                        normal: (ray.point_at(t) - self.center).unit(), // I hate myself for doing this
+                        material: self.material
                     })
                 }
             }
