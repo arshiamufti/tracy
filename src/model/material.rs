@@ -1,17 +1,8 @@
-use model::vector::Vec3; use model::ray::Ray; use model::hitrecord::HitRecord;
+use model::vector::Vec3;
+use model::ray::Ray;
+use model::hitrecord::HitRecord;
 extern crate rand;
 use rand::Rng;
-
-/*
-pub trait Material {
-
-    /* 
-     * Given a hit record for the material and an incident ray, returns the
-     * scattered ray and attenuation (or None, if the entire ray is absorbed).
-     */
-    fn scatter(ray_in: &Ray, rec: &HitRecord) -> Option<(Vec3, Ray)> where Self: Sized;
-}
-*/
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Lambertian {

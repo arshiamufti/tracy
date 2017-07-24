@@ -40,16 +40,6 @@ fn color(ray: &Ray, world: &Hitable, depth: u32) -> Vec3 {
     }
 }
 
-/*
- * [ first paragraph taken from Ray Tracing in One Weekend by Peter Shirley ]
- *
- * When a real camera takes a picture, there are usually no jaggies along edges
- * because the edge pixels are a blend of some foreground and some background.
- * We can get the same effect by averaging a bunch of samples inside each pixel.
- *
- * Instead of getting the colour at only *one* point of the pixel, we take `ns`
- * samples within the pixel, and average the colour. 
- */
 fn main() {
 
     let nx = 200; // rows
