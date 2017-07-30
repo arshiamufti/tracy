@@ -1,4 +1,4 @@
-# rst
+# tracy
 
 I'm teaching myself Rust! There are many many reasons for this, which I will
 write down if (1) I find the time (2) someone actually wants to know.
