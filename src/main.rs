@@ -1,9 +1,9 @@
 /*
- * [chapter 7 ]
+ * [chapter 8 ]
  *
- * Diffuse Materials - render realistic looking spheres!
+ * Metal
  *
- * output: diffuse.png
+ * output: metal.png
  */
 
 mod model;
@@ -64,7 +64,7 @@ fn main() {
                 center: Vec3 { x: 0.0, y: -100.5, z: -1.0},
                 material: Material::Lambertian(
                     Lambertian {
-                        albedo: Vec3 { x: 0.8, y: 0.3, z: 0.3 }
+                        albedo: Vec3 { x: 0.8, y: 0.8, z: 0.0 }
                     })
                 }),
             Box::new(Sphere {
