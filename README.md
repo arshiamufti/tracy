@@ -25,3 +25,5 @@ Chapters:
 4. Spheres! (`simple_sphere.rs`)
 5. Surface normals (shading spheres) (`single_shaded_spheres.rs`)
 6. Multiple hitable surfaces (`multiple_spheres.rs`)
+7. Diffuse Materials - render realistic looking spheres! (`diffuse.rs`)
+8. Metal (`metal.rs`)
